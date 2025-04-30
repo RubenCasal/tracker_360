@@ -6,8 +6,24 @@ ros2 param set /multi_person_tracker object_tracked "'1'"
 
 tracker_360 is a ROS 2 package for real-time person detection and tracking in 360° equirectangular images captured with a Ricoh Theta Z1 camera. It supports both multi-object tracking using YOLO + ByteTrack and single-object tracking using CSRT, with panoramic crop support.
 
-## Single Object Tracking
+## Single Object Tracking (SOT)
 
-## Multi Object Tracking
+### CSTR Algorithm 
+
+### Set Tracked 
+
+## Multi Object Tracking (MOT)
+
+### ByteTrack
 
 ## Crop and Warp
+
+## ROS2 Usage
+
+### Run Nodes separately
+
+### Run Launch
+
+### Topics
+
+## Conclusions and Limitations
