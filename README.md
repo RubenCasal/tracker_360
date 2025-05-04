@@ -14,11 +14,12 @@ This mode focuses on tracking a **single target** once it has been initially det
 
 ### CSRT Algorithm
 
-* CSRT (Discriminative Correlation Filter with Channel and Spatial Reliability) is a tracker that builds a model of the target appearance and updates it over time.
-* It operates by learning a correlation filter that maximizes response at the target location while suppressing background noise.
-* Channel reliability helps weight feature channels (like color or gradients) based on their consistency over time.
-* Spatial reliability masks help focus on stable regions within the object.
-* CSRT is robust to **scale variations, occlusion, and deformation**, but it requires a good initial bounding box.
+* **CSRT (Discriminative Correlation Filter with Channel and Spatial Reliability)** is a robust visual tracking algorithm based on correlation filters.
+* It builds a model of the object's appearance and **updates it continuously** with each new frame.
+* The algorithm creates a **discriminative filter** trained to respond strongly at the target location and suppress background activations.
+* **Channel reliability** evaluates which feature channels (color, gradient, etc.) are most stable and informative and assigns them higher weights.
+* **Spatial reliability** applies a mask to down-weight unstable parts of the bounding box, focusing on stable core regions.
+* CSRT is resilient to **scale changes, partial occlusions, and object deformation**, though it relies on a reliable first detection.
 
 ### Set Tracked
 
@@ -34,11 +35,14 @@ This mode supports tracking **multiple persons simultaneously**, each with its o
 
 ### ByteTrack
 
-* ByteTrack is a **tracking-by-detection** algorithm that associates detections across frames.
-* After YOLO predicts bounding boxes, ByteTrack matches detections frame-to-frame using **IoU (Intersection over Union)**.
-* It tracks both **high-confidence** and **low-confidence** detections, improving robustness in crowded scenes.
-* A Kalman filter predicts object motion, and a Hungarian algorithm performs optimal data association.
-* ByteTrack is extremely lightweight and fast, making it ideal for real-time use.
+* **ByteTrack** is a **tracking-by-detection** algorithm that links object detections across time.
+* In each frame, YOLO generates bounding boxes, and ByteTrack associates them with tracks using the following:
+
+  * **IoU (Intersection over Union)** to compare current detections with previous positions.
+  * A **Kalman filter** to predict the expected position of each tracked object.
+  * The **Hungarian algorithm** for optimal matching between predictions and new detections.
+* ByteTrack is unique in that it retains **low-confidence detections** to help re-associate temporarily lost tracks, increasing tracking continuity.
+* It operates at high speed, has low computational overhead, and works well even in **crowded scenes** with occlusions.
 
 ### Follow a Specific ID
 
@@ -66,13 +70,11 @@ To handle this, the `crop_and_wrap()` utility reconstructs a **continuous crop**
 
 ### How it works:
 
-1. The bounding box is padded and its `x1`, `x2` coordinates are checked against the image width.
-2. If the crop range goes negative (left of 0) or exceeds the width (right of 360°), the function wraps around:
-
-   * **Left wrap**: crop the right-side of the image and the beginning portion.
-   * **Right wrap**: crop the end of the image and the leftmost part.
-3. The wrapped crops are **recombined horizontally** using `np.hstack()`.
-4. This ensures the object remains visually centered even if its coordinates cross the panorama boundary.
+1. The bounding box is padded, and its horizontal coordinates (`x1`, `x2`) are analyzed.
+2. If `x1 < 0` or `x2 > image width`, it indicates the object crosses the panorama seam.
+3. The crop is split into two valid regions: one on the right border, and one on the left.
+4. The function extracts both parts and horizontally **concatenates them** (`np.hstack()`), forming a seamless crop.
+5. The result is a **wrapped crop**, preserving object continuity near 0°/360°.
 
 <p align="center">
   <img src="readme_images/wrapped_crop.png" alt="Wrapped Cropping Example" width="600">
@@ -93,19 +95,7 @@ ros2 run tracker_360 theta_node
 In another terminal (multi-object tracking mode):
 
 ```bash
-ros2 run tracker_360 multi_person_tracker.py --ros-args -p object_tracked:=full_image
-```
-
-Or to follow a specific ID (e.g., ID 3):
-
-```bash
-ros2 param set /multi_person_tracker object_tracked "'3'"
-```
-
-To go back to full-frame mode:
-
-```bash
-ros2 param set /multi_person_tracker object_tracked "'full_image'"
+ros2 run tracker_360 multi_person_tracker.py 
 ```
 
 For single-object CSRT tracking:
@@ -139,27 +129,3 @@ ros2 launch tracker_360 yolo_tracker.launch.py
 
 ---
 
-## Requirements
-
-* ROS 2 Humble
-* Python ≥ 3.8
-* Packages:
-
-  * `ultralytics`, `opencv-python`, `cv_bridge`, `rclpy`, `sensor_msgs`
-  * GStreamer 1.x and `libuvc`
-
----
-
-## Credits
-
-* Ricoh Theta Z1 + libuvc-theta driver
-* YOLOv8 by Ultralytics
-* ByteTrack (Zhang et al.)
-* OpenCV CSRT Tracker
-* ROS 2 Foxy/Humble
-
----
-
-## License
-
-MIT License
