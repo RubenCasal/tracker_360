@@ -7,7 +7,14 @@
 The system enables detection and tracking across full 360° images, with the ability to extract cropped views of specific tracked targets.
 
 ---
-
+## Clone and Build 
+```bash
+cd ~/ros2_ws/src
+git clone (https://github.com/RubenCasal/tracker-360.git
+cd ~/ros2_ws
+colcon build --packages-select panoramic_object_detector
+source install/setup.bash
+```
 ## Single Object Tracking (SOT)
 
 This mode focuses on tracking a **single target** once it has been initially detected. The cropped view is adjusted dynamically frame-by-frame.
