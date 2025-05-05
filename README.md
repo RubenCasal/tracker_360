@@ -1,4 +1,4 @@
-# 360° Multi-Person Tracking for Ricoh Theta Z1 (ROS 2)
+# 360° Tracking for Ricoh Theta Z1 (ROS 2)
 
 ## Overview
 
