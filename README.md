@@ -21,6 +21,11 @@ This mode focuses on tracking a **single target** once it has been initially det
 * **Spatial reliability** applies a mask to down-weight unstable parts of the bounding box, focusing on stable core regions.
 * CSRT is resilient to **scale changes, partial occlusions, and object deformation**, though it relies on a reliable first detection.
 
+<div align="center">
+  <img src="readme_media/single_object_tracking.gif" alt="Single-Object-Tracking" width="500">
+</div>
+
+
 ### Set Tracked
 
 * The tracking target is automatically initialized as the first detection found by YOLO in the first frame.
@@ -43,6 +48,11 @@ This mode supports tracking **multiple persons simultaneously**, each with its o
   * The **Hungarian algorithm** for optimal matching between predictions and new detections.
 * ByteTrack is unique in that it retains **low-confidence detections** to help re-associate temporarily lost tracks, increasing tracking continuity.
 * It operates at high speed, has low computational overhead, and works well even in **crowded scenes** with occlusions.
+
+<div align="center">
+  <img src="readme_media/multi_object_tracking.gif" alt="Multi-Object-Tracking" width="500">
+</div>
+
 
 ### Follow a Specific ID
 
@@ -76,9 +86,6 @@ To handle this, the `crop_and_wrap()` utility reconstructs a **continuous crop**
 4. The function extracts both parts and horizontally **concatenates them** (`np.hstack()`), forming a seamless crop.
 5. The result is a **wrapped crop**, preserving object continuity near 0°/360°.
 
-<p align="center">
-  <img src="readme_images/wrapped_crop.png" alt="Wrapped Cropping Example" width="600">
-</p>
 
 ---
 
