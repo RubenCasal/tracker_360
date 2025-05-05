@@ -99,6 +99,7 @@ install(PROGRAMS
   scripts/yolo_tracker.py
   scripts/multi_person_tracker.py
   scripts/crop_and_wrap.py
+  scripts/custom_bytetrack.py
   DESTINATION lib/${PROJECT_NAME}  
 )
 

@@ -44,7 +44,6 @@ class MultiPersonTrackerNode(Node):
 
         results = self.model.track(
             frame,
-            classes=[0],
             conf=0.5,
             iou=0.5,
             persist=True,
