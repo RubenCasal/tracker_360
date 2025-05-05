@@ -109,11 +109,11 @@ ros2 run tracker_360 yolo_tracker.py
 Alternatively, use launch files:
 
 ```bash
-ros2 launch tracker_360 multi_person_tracker.launch.py
+ros2 launch tracker_360 multi_tracker_launch.py
 ```
 
 ```bash
-ros2 launch tracker_360 yolo_tracker.launch.py
+ros2 launch tracker_360 single_tracker_launch.py
 ```
 
 ---
